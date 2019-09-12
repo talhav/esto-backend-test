@@ -25,7 +25,7 @@ class TransactionsController extends BaseController
         foreach ($users as $key=>$user){
             $data[$key]['id']= $user->id;
             $data[$key]['name']= $user->name;
-            $data[$key]['email']= $user->name;
+            $data[$key]['email']= $user->email;
             $data[$key]['total_debit_amount']= $user->transactions->where('type','DEBIT')->sum('amount');
         }
 
