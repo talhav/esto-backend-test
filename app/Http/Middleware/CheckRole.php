@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CheckRole
@@ -10,16 +11,16 @@ class CheckRole
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param Request $request
+     * @param Closure $next
      * @return mixed
      */
-    public function handle($request, Closure $next,$role)
+    public function handle($request, Closure $next, $role)
     {
-        if($role == 'admin' && !Auth::user()->is_admin){
+        if ($role == 'admin' && !Auth::user()->is_admin) {
             return response()->json(['error' => 'unauthorized_user'], 403);
         }
-        if($role == 'user' && Auth::user()->is_admin){
+        if ($role == 'user' && Auth::user()->is_admin) {
             return response()->json(['error' => 'unauthorized_user'], 403);
         }
         return $next($request);

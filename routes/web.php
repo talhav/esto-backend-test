@@ -18,7 +18,7 @@ Route::get('/unauthorized', function () {
 
 Route::group([
     'prefix' => 'manage',
-    'middleware' => ['auth','check.role:admin']
+    'middleware' => ['auth', 'check.role:admin']
 ], function () {
     Route::post('/user/create', [
         'as' => 'admin.create_user',
@@ -36,7 +36,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => ['auth','check.role:user']
+    'middleware' => ['auth', 'check.role:user']
 ], function () {
     Route::post('/transaction/create', [
         'as' => 'transaction.create',

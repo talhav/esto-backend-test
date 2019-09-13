@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserCreateRequest;
 use App\Transaction;
-use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
@@ -17,18 +15,18 @@ class TransactionsController extends BaseController
     {
         $data = $request->all();
 
-        $validate = Validator::make($data,[
+        $validate = Validator::make($data, [
             'type' => 'required|in:DEBIT,CREDIT',
             'amount' => 'required|numeric|min:0|not_in:0',
         ]);
 
-        if($validate->fails()){
-            return response()->json(['status'=> 400, 'message' => 'Transaction not created', 'errors' => $validate->errors()->getMessageBag()]);
+        if ($validate->fails()) {
+            return response()->json(['status' => 400, 'message' => 'Transaction not created', 'errors' => $validate->errors()->getMessageBag()]);
         }
 
         $data["user_id"] = Auth::user()->id;
         $transaction = Transaction::create($data);
-        return response()->json(['status'=> 200, 'message' => 'Transaction Created Succesfully', 'data' => $transaction]);
+        return response()->json(['status' => 200, 'message' => 'Transaction Created Succesfully', 'data' => $transaction]);
 
     }
 

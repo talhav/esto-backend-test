@@ -3,7 +3,6 @@
 namespace Tests\Unit;
 
 use App\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
@@ -14,26 +13,32 @@ class TransactionManagementTest extends TestCase
     public function a_debit_transaction_can_be_added_by_the_user()
     {
         $this->userLogin();
-        for($i=0;$i<5;$i++) {
+        for ($i = 0; $i < 5; $i++) {
             $response = $this->post('transaction/create',
                 [
                     'type' => 'DEBIT',
-                    'amount' => rand(1,99)
+                    'amount' => rand(1, 99)
                 ]
             );
         }
         $this->assertEquals(200, $response->json(['status']));
     }
 
+    private function userLogin()
+    {
+        $user_id = User::where('is_admin', 0)->orderBy('id', 'desc')->first()->id;
+        Auth::loginUsingId($user_id);
+    }
+
     /** @test */
     public function a_credit_transaction_can_be_added_by_the_user()
     {
         $this->userLogin();
-        for($i=0;$i<5;$i++){
+        for ($i = 0; $i < 5; $i++) {
             $response = $this->post('transaction/create',
                 [
                     'type' => 'CREDIT',
-                    'amount' => rand(1,99)
+                    'amount' => rand(1, 99)
                 ]
             );
 
@@ -51,7 +56,7 @@ class TransactionManagementTest extends TestCase
                 'amount' => '',
             ]);
 
-        $this->assertArrayHasKey('amount',$response->json(['errors']));
+        $this->assertArrayHasKey('amount', $response->json(['errors']));
 
     }
 
@@ -65,7 +70,7 @@ class TransactionManagementTest extends TestCase
                 'amount' => -21,
             ]);
 
-        $this->assertArrayHasKey('amount',$response->json(['errors']));
+        $this->assertArrayHasKey('amount', $response->json(['errors']));
 
     }
 
@@ -75,11 +80,11 @@ class TransactionManagementTest extends TestCase
         $this->userLogin();
         $response = $this->post('transaction/create',
             [
-               'type' => '',
+                'type' => '',
                 'amount' => 100,
             ]);
 
-        $this->assertArrayHasKey('type',$response->json(['errors']));
+        $this->assertArrayHasKey('type', $response->json(['errors']));
 
     }
 
@@ -89,11 +94,11 @@ class TransactionManagementTest extends TestCase
         $this->userLogin();
         $response = $this->post('transaction/create',
             [
-               'type' => 'debits',
+                'type' => 'debits',
                 'amount' => 100,
             ]);
 
-        $this->assertArrayHasKey('type',$response->json(['errors']));
+        $this->assertArrayHasKey('type', $response->json(['errors']));
 
     }
 
@@ -131,13 +136,9 @@ class TransactionManagementTest extends TestCase
         $this->assertEquals(200, $response->json(['status']));
     }
 
-    private function userLogin(){
-        $user_id = User::where('is_admin',0)->orderBy('id','desc')->first()->id;
-        Auth::loginUsingId($user_id);
-    }
-
-    private function adminLogin(){
-        $user_id = User::where('is_admin',1)->orderBy('id','desc')->first()->id;
+    private function adminLogin()
+    {
+        $user_id = User::where('is_admin', 1)->orderBy('id', 'desc')->first()->id;
         Auth::loginUsingId($user_id);
     }
 
